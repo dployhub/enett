@@ -1,0 +1,23 @@
+{
+    "name": "dployhub/enett",
+    "description": "Enett API payment integration library",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["laravel", "payment", "enett", "api"],
+    "authors": [
+        {
+            "name": "Dploy Group",
+            "email": "contact@dploy.com.au"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+      "monolog/monolog": "~1.11"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dploy\\Enett\\":"src/",
+            "Dploy\\Enett\\Tests\\": "tests/"
+        }
+    }
+}
