@@ -68,12 +68,12 @@ class EnettResponse {
 
 	public function toJson()
 	{
-		return $this->response ? json_decode($this->response) : '';
+		return $this->response ? json_encode($this->toArray()) : '';
 	}
 
 	public function toArray()
 	{
-		return $this->response ? json_decode($this->responseData, true) : [];
+		return $this->response ? (array)$this->response : [];
 	}
 
 	public function __get($value)

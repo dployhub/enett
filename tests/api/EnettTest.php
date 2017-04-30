@@ -2,14 +2,14 @@
 
 namespace Dploy\Enett\Tests;
 
+use Dploy\Enett\Models\EnettResponse;
 use Dploy\Enett\Models\ProcessDebitRequest;
 use DateTime;
 
 class EnettTest extends TestBase
 {
     /**
-     * Test CreateTokenRequest
-     * Fields can be nested multi-levels deep
+     * Test ProcessDebitRequestShouldValidateAndSerializeProperly
      *
      * @return void
      */
@@ -43,7 +43,7 @@ class EnettTest extends TestBase
         $this->assertEquals($req->agentID, '500221');
         $this->assertEquals($req->payer, '500221');
         $this->assertEquals($req->validate(), true);
-        $this->assertEquals($req->toDataString(), 'transID=1234567&primaryRef=987654&secondaryRef=&passengerName=John+Citizen&departureDate=2017-10-01&notes=Testing+notes&ECN=500318&amount=10.00&currency=AUD&paymentDate=2017-04-29&agentID=500221&payer=500221');
+        $this->assertEquals($req->toDataString(), 'transID=1234567&primaryRef=987654&secondaryRef=&passengerName=John+Citizen&departureDate=2017-10-01&notes=Testing+notes&ECN=500318&amount=10.00&currency=AUD&paymentDate=' . date('Y-m-d') . '&agentID=500221&payer=500221');
 
         $req->amount = 'Test';
         $this->assertEquals($req->validate(), false);
@@ -64,6 +64,37 @@ class EnettTest extends TestBase
         $this->assertEquals($req->validate(), false);
         $this->assertEquals(count($req->getErrors()), 4);
         $this->assertEquals('Please enter a valid payment date', end($req->getErrors()));
+    }
+
+    /**
+     * Test ProcessDebitResponseShouldSerializeProperly
+     *
+     * @return void
+     */
+    public function testProcessDebitResponseShouldSerializeProperly()
+    {
+        $xml = <<<XML
+<?xml version="1.0" encoding="utf-8"?>
+<ResponseMessage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://enett.com/webservices/">
+  <successful>true</successful>
+  <transactionID>5378097</transactionID>
+  <authorisationDateTime>2017-04-29T00:00:00</authorisationDateTime>
+</ResponseMessage>
+XML;
+
+        $response = new EnettResponse($xml);
+
+        $array = $response->toArray();
+        $isArray = is_array($array);
+        $this->assertEquals($isArray, true);
+        if ($isArray) {
+          $this->assertEquals($array['successful'] == 'true', true);
+          $this->assertEquals($array['transactionID'] == '5378097', true);
+          $this->assertEquals($array['authorisationDateTime'] == '2017-04-29T00:00:00', true);
+        }
+
+        $json = $response->toJson();
+        $this->assertEquals($json == '{"successful":"true","transactionID":"5378097","authorisationDateTime":"2017-04-29T00:00:00"}', true);
     }
 
     /**
