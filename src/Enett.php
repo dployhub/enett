@@ -5,17 +5,7 @@ use Monolog\Logger;
 use Dploy\Enett\Exceptions\EnettException;
 use Dploy\Enett\Models\EnettResponse;
 use Dploy\Enett\Models\EnettRequest;
-use Dploy\Enett\Models\CapturePreauthPaymentRequest;
-use Dploy\Enett\Models\CreateAsyncPaymentRequest;
-use Dploy\Enett\Models\CreateSyncPaymentRequest;
-use Dploy\Enett\Models\CreateRecurringPaymentRequest;
 use Dploy\Enett\Models\ProcessDebitRequest;
-use Dploy\Enett\Models\CreateTokenPaymentRequest;
-use Dploy\Enett\Models\DeleteTokenRequest;
-use Dploy\Enett\Models\GetPaymentStatusRequest;
-use Dploy\Enett\Models\IssueCreditRequest;
-use Dploy\Enett\Models\RefundPaymentRequest;
-use Dploy\Enett\Models\ReversePaymentRequest;
 
 class Enett {
 
@@ -37,11 +27,11 @@ class Enett {
 		$this->config = $config;
 		$this->hosts = [
 			'test' => 'https://enett-demo.com',
-			'live' => 'https://enett-demo.com',
+			'live' => 'https://enett.com',
 		];
 		$this->services = [
 			static::SERVICE_CREDIT => '/CCService/ccservice.asmx',
-			static::SERVICE_DEBIT => '/NextGenDebitService/Debitservice.asmx',
+			static::SERVICE_DEBIT => '/DebitService/Debitservice.asmx',
 		];
 		$this->integrator = $config['integrator'];
 		$this->source = $config['source'];
